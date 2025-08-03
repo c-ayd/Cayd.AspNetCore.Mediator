@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0BFB698B-945A-4532-9774-82BF69306C14}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{1B1DD840-2CDA-4335-ADFC-471D4638A5C4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F380B0A4-8064-4218-AB23-E1182BF89B7E}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cayd.AspNetCore.Mediator", "src\Cayd.AspNetCore.Mediator\Cayd.AspNetCore.Mediator.csproj", "{79D0F3C0-C49B-4B11-87BC-967FD1C12DA1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{79D0F3C0-C49B-4B11-87BC-967FD1C12DA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79D0F3C0-C49B-4B11-87BC-967FD1C12DA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79D0F3C0-C49B-4B11-87BC-967FD1C12DA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79D0F3C0-C49B-4B11-87BC-967FD1C12DA1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{79D0F3C0-C49B-4B11-87BC-967FD1C12DA1} = {0BFB698B-945A-4532-9774-82BF69306C14}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6A47A3AD-C26E-4978-8DED-233D03DBCAA6}
+	EndGlobalSection
+EndGlobal
