@@ -1,4 +1,4 @@
-﻿using Cayd.AspNetCore.Mediator.Test.Integration.Fixtures;
+﻿using Cayd.AspNetCore.Mediator.Test.Utility.Fixtures;
 using Xunit;
 
 namespace Cayd.AspNetCore.Mediator.Test.Integration.Collections

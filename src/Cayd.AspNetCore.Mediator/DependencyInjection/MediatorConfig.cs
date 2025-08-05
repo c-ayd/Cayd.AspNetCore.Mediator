@@ -1,24 +1,66 @@
-﻿using System.Collections.Generic;
+﻿using Cayd.AspNetCore.Mediator.Exceptions;
+using Cayd.AspNetCore.Mediator.Flows;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Cayd.AspNetCore.Mediator.DependencyInjection
 {
     public class MediatorConfig
     {
-        private List<Assembly> _assemblies = new List<Assembly>();
+        private readonly IServiceCollection _services;
+        private readonly List<Assembly> _assemblies;
+        private bool _isThereAnyMediatorFlow;
 
-        public MediatorConfig RegisterHandlersFromAssembly(Assembly assembly)
+        public MediatorConfig(IServiceCollection services)
         {
-            _assemblies.Add(assembly);
-            return this;
+            _services = services;
+            _assemblies = new List<Assembly>();
+            _isThereAnyMediatorFlow = false;
         }
 
-        public MediatorConfig RegisterHandlersFromAssemblies(params Assembly[] assemblies)
+        public void RegisterHandlersFromAssembly(Assembly assembly)
+            => _assemblies.Add(assembly);
+
+        public void RegisterHandlersFromAssemblies(params Assembly[] assemblies)
+            => _assemblies.AddRange(assemblies);
+
+        public void AddTransientFlow(Type flowType)
+            => AddFlow(flowType, ServiceLifetime.Transient);
+
+        public void AddScopedFlow(Type flowType)
+            => AddFlow(flowType, ServiceLifetime.Scoped);
+
+        public void AddSingletonFlow(Type flowType)
+            => AddFlow(flowType, ServiceLifetime.Singleton);
+
+        private void AddFlow(Type flowType, ServiceLifetime lifetime)
         {
-            _assemblies.AddRange(assemblies);
-            return this;
+            if (!flowType.IsClass || flowType.IsAbstract)
+                throw new WrongTypeException(flowType.Name);
+
+            var implementationType = flowType.GetInterfaces()
+                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMediatorFlow<,>))
+                .FirstOrDefault();
+
+            if (implementationType == null)
+                throw new MissingInterfaceException(flowType.Name);
+
+            if (flowType.IsGenericTypeDefinition)
+            {
+                _services.Add(new ServiceDescriptor(typeof(IMediatorFlow<,>), flowType, lifetime));
+            }
+            else
+            {
+                _services.Add(new ServiceDescriptor(implementationType, flowType, lifetime));
+            }
+
+            _isThereAnyMediatorFlow = true;
         }
 
-        public List<Assembly> GetAssemblies() => _assemblies;
+        internal List<Assembly> GetAssemblies() => _assemblies;
+        internal bool IsThereAnyMediatorFlow() => _isThereAnyMediatorFlow;
     }
 }

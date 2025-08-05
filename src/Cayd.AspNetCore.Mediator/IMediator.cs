@@ -1,4 +1,4 @@
-﻿using Cayd.AspNetCore.Mediator.Abstraction;
+﻿using Cayd.AspNetCore.Mediator.Abstractions;
 using System.Threading;
 using System.Threading.Tasks;
 

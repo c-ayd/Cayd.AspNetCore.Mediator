@@ -1,4 +1,4 @@
-﻿namespace Cayd.AspNetCore.Mediator.Abstraction
+﻿namespace Cayd.AspNetCore.Mediator.Abstractions
 {
     public interface IAsyncRequest<TResponse>
     {

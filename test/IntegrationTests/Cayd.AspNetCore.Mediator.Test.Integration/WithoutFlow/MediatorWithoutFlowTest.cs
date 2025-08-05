@@ -5,23 +5,17 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System;
 using Xunit;
-using Cayd.AspNetCore.Mediator.Test.Utility.Responses;
-using System.Net.Http.Json;
-using Cayd.AspNetCore.Mediator.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using Cayd.AspNetCore.Mediator.Test.Utility.Services;
+using Cayd.AspNetCore.Mediator.Test.Utility.Responses;
+using System.Net.Http.Json;
+using Cayd.AspNetCore.Mediator.Test.Integration.OtherAssembly.Responses;
 using Xunit.Abstractions;
 
-
-#if NET6_0_OR_GREATER
-using Cayd.AspNetCore.Mediator.Test.Utility.Handlers;
-using System.Threading;
-#endif
-
-namespace Cayd.AspNetCore.Mediator.Test.Integration
+namespace Cayd.AspNetCore.Mediator.Test.Integration.WithoutFlow
 {
-    [Collection(nameof(TestHostCollection))]
-    public partial class MediatorTest
+    [Collection(nameof(TestHostWithoutFlowCollection))]
+    public partial class MediatorWithoutFlowTest
     {
         private const int _numberOfRepetingTest = 10;
 
@@ -29,17 +23,15 @@ namespace Cayd.AspNetCore.Mediator.Test.Integration
         private const string _substractRequestEndpoint = "/test/substract";
         private const string _multiplyRequestEndpoint = "/test/multiply";
         private const string _divideRequestEndpoint = "/test/divide";
-        private const string _cancelRequestEndpoint = "/test/cancel";
-        private const string _orderedRequestEndpoint = "/test/ordered";
 
-        private readonly TestHostFixture _testHostFixture;
+        private readonly TestHostWithoutFlowFixture _testHostWithoutFlowFixture;
 
         private readonly ITestOutputHelper _testOutputHelper;
 
-        public MediatorTest(TestHostFixture testHostFixture,
+        public MediatorWithoutFlowTest(TestHostWithoutFlowFixture testHostWithoutFlowFixture,
             ITestOutputHelper testOutputHelper)
         {
-            _testHostFixture = testHostFixture;
+            _testHostWithoutFlowFixture = testHostWithoutFlowFixture;
             _testOutputHelper = testOutputHelper;
         }
 
@@ -53,8 +45,10 @@ namespace Cayd.AspNetCore.Mediator.Test.Integration
                 var value = random.Next(0, 10);
                 var add = random.Next(0, 10);
 
+                var currentSingletonCounter = _testHostWithoutFlowFixture.Host.Services.GetRequiredService<TestSingletonService>().Counter;
+
                 // Act
-                var result = await _testHostFixture.Client.GetAsync(_addRequestEndpoint + $"?value={value}&add={add}");
+                var result = await _testHostWithoutFlowFixture.Client.GetAsync(_addRequestEndpoint + $"?value={value}&add={add}");
 
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, result.StatusCode);
@@ -67,8 +61,8 @@ namespace Cayd.AspNetCore.Mediator.Test.Integration
                 Assert.NotNull(response);
                 Assert.Equal(value + add, response.Result);
                 Assert.Equal(1, response.TransientCounter);
-                Assert.Equal(3, response.ScopedCounter);
-                Assert.Equal(101, response.SingletonCounter);
+                Assert.Equal(1, response.ScopedCounter);
+                Assert.Equal(currentSingletonCounter + 1, response.SingletonCounter);
             }
         }
 
@@ -82,8 +76,10 @@ namespace Cayd.AspNetCore.Mediator.Test.Integration
                 var value = random.Next(0, 10);
                 var substract = random.Next(0, 10);
 
+                var currentSingletonCounter = _testHostWithoutFlowFixture.Host.Services.GetRequiredService<TestSingletonService>().Counter;
+
                 // Act
-                var result = await _testHostFixture.Client.GetAsync(_substractRequestEndpoint + $"?value={value}&substract={substract}");
+                var result = await _testHostWithoutFlowFixture.Client.GetAsync(_substractRequestEndpoint + $"?value={value}&substract={substract}");
 
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, result.StatusCode);
@@ -96,8 +92,8 @@ namespace Cayd.AspNetCore.Mediator.Test.Integration
                 Assert.NotNull(response);
                 Assert.Equal(value - substract, response.Result);
                 Assert.Equal(1, response.TransientCounter);
-                Assert.Equal(3, response.ScopedCounter);
-                Assert.Equal(101, response.SingletonCounter);
+                Assert.Equal(1, response.ScopedCounter);
+                Assert.Equal(currentSingletonCounter + 1, response.SingletonCounter);
             }
         }
 
@@ -111,8 +107,10 @@ namespace Cayd.AspNetCore.Mediator.Test.Integration
                 var value = random.Next(0, 10);
                 var multiply = random.Next(0, 10);
 
+                var currentSingletonCounter = _testHostWithoutFlowFixture.Host.Services.GetRequiredService<TestSingletonService>().Counter;
+
                 // Act
-                var result = await _testHostFixture.Client.GetAsync(_multiplyRequestEndpoint + $"?value={value}&multiply={multiply}");
+                var result = await _testHostWithoutFlowFixture.Client.GetAsync(_multiplyRequestEndpoint + $"?value={value}&multiply={multiply}");
 
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, result.StatusCode);
@@ -125,74 +123,36 @@ namespace Cayd.AspNetCore.Mediator.Test.Integration
                 Assert.NotNull(response);
                 Assert.Equal(value * multiply, response.Result);
                 Assert.Equal(1, response.TransientCounter);
-                Assert.Equal(3, response.ScopedCounter);
-                Assert.Equal(101, response.SingletonCounter);
+                Assert.Equal(1, response.ScopedCounter);
+                Assert.Equal(currentSingletonCounter + 1, response.SingletonCounter);
             }
         }
 
         [Fact]
-        public async Task DivideEndpoint_WhenHandlerIsNotRegistered_ShouldThrowException()
+        public async Task DivideEndpoint_WhenRequestExists_ShouldCallCorrespondingHandler()
         {
-            // Act
-            var result = await Record.ExceptionAsync(async () =>
-            {
-                await _testHostFixture.Client.GetAsync(_divideRequestEndpoint + "?value=10&divide=2");
-            });
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.IsType<HandlerNotFoundException>(result);
-        }
-
-#if NET6_0_OR_GREATER
-        [Fact]
-        public async Task CancelEndpoint_WhenRequestIsCancelled_ShouldNotExecuteTheRest()
-        {
-            // Arrange
-            var cts = new CancellationTokenSource();
-
-            // Act
-            var request = _testHostFixture.Client.GetAsync(_cancelRequestEndpoint, cts.Token);
-
-            await Task.Delay(1000);
-            cts.Cancel();
-
-            var requestException = await Record.ExceptionAsync(async () =>
-            {
-                await request;
-            });
-
-            // Assert
-            await Task.Delay(15000);
-
-            Assert.NotNull(requestException);
-            Assert.IsAssignableFrom<OperationCanceledException>(requestException);
-
-            Assert.Equal(0, CancelledHandler.Value);
-        }
-#endif
-
-        [Fact]
-        public async Task OrderedEndpoint_WhenRequestExists_ShouldExecuteMediatorFlowsInOrder()
-        {
+            var random = new Random();
             for (int i = 0; i < _numberOfRepetingTest; ++i)
             {
+                // Arrange
+                var value = random.Next(0, 10);
+                var divide = random.Next(1, 10);
+
+                var currentSingletonCounter = _testHostWithoutFlowFixture.Host.Services.GetRequiredService<TestSingletonService>().Counter;
+
                 // Act
-                var result = await _testHostFixture.Client.GetAsync(_orderedRequestEndpoint);
+                var result = await _testHostWithoutFlowFixture.Client.GetAsync(_divideRequestEndpoint + $"?value={value}&divide={divide}");
 
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, result.StatusCode);
 
-                var response = await result.Content.ReadFromJsonAsync<OrderedResponse>(new JsonSerializerOptions()
+                var response = await result.Content.ReadFromJsonAsync<DivideOtherAssemblyResponse>(new JsonSerializerOptions()
                 {
                     PropertyNameCaseInsensitive = true
                 });
 
                 Assert.NotNull(response);
-                Assert.Equal(5, response.Result);
-
-                var singletonValue = _testHostFixture.Host.Services.GetRequiredService<TestSingletonService>().Counter;
-                Assert.Equal(1_000_000, singletonValue);
+                Assert.Equal(value / divide, response.Result);
             }
         }
     }

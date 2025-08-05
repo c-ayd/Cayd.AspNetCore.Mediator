@@ -17,10 +17,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="5.0.0" Condition="'$(TargetFramework)' == 'net5.0'" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="6.0.0" Condition="'$(TargetFramework)' == 'net6.0'" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="8.0.0" Condition="'$(TargetFramework)' == 'net8.0'" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Cayd.AspNetCore.Mediator.Test.Utility\Cayd.AspNetCore.Mediator.Test.Utility.csproj" />
+    <ProjectReference Include="..\..\src\Cayd.AspNetCore.Mediator\Cayd.AspNetCore.Mediator.csproj" />
+    <ProjectReference Include="..\IntegrationTests\Cayd.AspNetCore.Mediator.Test.Integration.OtherAssembly\Cayd.AspNetCore.Mediator.Test.Integration.OtherAssembly.csproj" />
   </ItemGroup>
 
 </Project>
