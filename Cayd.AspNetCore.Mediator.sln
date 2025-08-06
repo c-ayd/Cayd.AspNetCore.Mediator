@@ -22,7 +22,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cayd.AspNetCore.Mediator.Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cayd.AspNetCore.Mediator.Test.Utility", "test\Cayd.AspNetCore.Mediator.Test.Utility\Cayd.AspNetCore.Mediator.Test.Utility.csproj", "{6E0D42EF-1EBB-4E8D-A715-870FC2306F13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cayd.AspNetCore.Mediator.Test.Integration.OtherAssembly", "test\IntegrationTests\Cayd.AspNetCore.Mediator.Test.Integration.OtherAssembly\Cayd.AspNetCore.Mediator.Test.Integration.OtherAssembly.csproj", "{BA2653F2-C0AF-47A0-815E-2B279CCA8B88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cayd.AspNetCore.Mediator.Test.Integration.OtherAssembly", "test\IntegrationTests\Cayd.AspNetCore.Mediator.Test.Integration.OtherAssembly\Cayd.AspNetCore.Mediator.Test.Integration.OtherAssembly.csproj", "{BA2653F2-C0AF-47A0-815E-2B279CCA8B88}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{116D88AC-89A4-4D64-A8CF-6CF8CCD933B0}"
+	ProjectSection(SolutionItems) = preProject
+		assets\nuget-logo.png = assets\nuget-logo.png
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
