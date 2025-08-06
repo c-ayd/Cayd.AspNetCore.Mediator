@@ -35,7 +35,7 @@ public class MyResponse
     // ... properties of the response
 }
 ```
-- Registering Mediator and Handlers:
+- Adding Mediator and Handlers:
 ```csharp
 /**
  * Minimal API - Program.cs
@@ -169,7 +169,7 @@ public class MyCustomSpecificMediatorFlow : IMediatorFlow<MyRequest, MyResponse>
     }
 }
 ```
-- Registering Custom Flows:
+- Adding Custom Flows:
 ```csharp
 services.AddMediator(config =>
 {
@@ -241,7 +241,7 @@ public class MyRequestValidation : AbstractValidator<MyRequest>
     }
 }
 ```
-- Registering The Validation Flow:
+- Adding The Validation Flow:
 ```csharp
 services.AddMediator(config =>
 {
