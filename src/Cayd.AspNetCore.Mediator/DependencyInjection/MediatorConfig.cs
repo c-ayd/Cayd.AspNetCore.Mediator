@@ -21,10 +21,10 @@ namespace Cayd.AspNetCore.Mediator.DependencyInjection
             _isThereAnyMediatorFlow = false;
         }
 
-        public void RegisterHandlersFromAssembly(Assembly assembly)
+        public void AddHandlersFromAssembly(Assembly assembly)
             => _assemblies.Add(assembly);
 
-        public void RegisterHandlersFromAssemblies(params Assembly[] assemblies)
+        public void AddHandlersFromAssemblies(params Assembly[] assemblies)
             => _assemblies.AddRange(assemblies);
 
         public void AddTransientFlow(Type flowType)

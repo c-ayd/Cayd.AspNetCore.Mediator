@@ -38,7 +38,7 @@ namespace Cayd.AspNetCore.Mediator.Test.Utility.Fixtures
 
                             services.AddMediator(config =>
                             {
-                                config.RegisterHandlersFromAssemblies(Assembly.GetAssembly(typeof(TestHostFixture))!,
+                                config.AddHandlersFromAssemblies(Assembly.GetAssembly(typeof(TestHostFixture))!,
                                     Assembly.GetAssembly(typeof(DivideOtherAssemblyRequest))!);
                             });
                         })

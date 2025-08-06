@@ -45,7 +45,7 @@ namespace Cayd.AspNetCore.Mediator.Test.Utility.Fixtures
 
                             services.AddMediator(config =>
                             {
-                                config.RegisterHandlersFromAssembly(Assembly.GetAssembly(typeof(TestHostFixture))!);
+                                config.AddHandlersFromAssembly(Assembly.GetAssembly(typeof(TestHostFixture))!);
 
                                 config.AddTransientFlow(typeof(TestTransientFlow<,>));
                                 config.AddScopedFlow(typeof(TestScopedFlow<,>));

@@ -6,7 +6,6 @@ using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,7 +44,7 @@ namespace Cayd.AspNetCore.Mediator.Test.Integration.OtherLibraryIntegrations
 
                             services.AddMediator(config =>
                             {
-                                config.RegisterHandlersFromAssembly(Assembly.GetAssembly(typeof(TestHostFixture))!);
+                                config.AddHandlersFromAssembly(Assembly.GetAssembly(typeof(TestHostFixture))!);
 
                                 config.AddScopedFlow(typeof(ExecResult_FluentValidation_Flow<,>));
                             });
@@ -66,14 +65,14 @@ namespace Cayd.AspNetCore.Mediator.Test.Integration.OtherLibraryIntegrations
                                     var mediator = context.RequestServices.GetRequiredService<IMediator>();
                                     var response = await mediator.SendAsync(request);
 
-                                    var objectResult = response.Match(
-                                        (code, result, metadata) => Success(code, result, metadata),
-                                        (code, errors, metadata) => Fail(code, errors, metadata)
+                                    var body = response.Match(
+                                        (code, result, metadata) => SuccessBody(code, result, metadata),
+                                        (code, errors, metadata) => FailBody(code, errors, metadata)
                                     );
 
-                                    context.Response.StatusCode = objectResult.StatusCode!.Value;
+                                    context.Response.StatusCode = (int)body["statusCode"]!;
                                     context.Response.ContentType = MediaTypeNames.Application.Json;
-                                    await context.Response.WriteAsJsonAsync(objectResult.Value);
+                                    await context.Response.WriteAsJsonAsync(body);
                                 });
                             });
                         });
@@ -84,35 +83,21 @@ namespace Cayd.AspNetCore.Mediator.Test.Integration.OtherLibraryIntegrations
             _client = _host.GetTestClient();
         }
 
-        private ObjectResult Success(int statusCode, object? data, object? metadata)
-        {
-            var body = new Dictionary<string, object?>()
+        private Dictionary<string, object?> SuccessBody(int statusCode, object? data, object? metadata)
+            => new Dictionary<string, object?>()
             {
                 { "statusCode", statusCode },
                 { "data", data },
                 { "metadata", metadata }
             };
 
-            return new ObjectResult(body)
-            {
-                StatusCode = statusCode
-            };
-        }
-
-        private ObjectResult Fail(int statusCode, object? errors, object? metadata)
-        {
-            var body = new Dictionary<string, object?>()
+        private Dictionary<string, object?> FailBody(int statusCode, object? errors, object? metadata)
+            => new Dictionary<string, object?>()
             {
                 { "statusCode", statusCode },
                 { "errors", errors },
                 { "metadata", metadata }
             };
-
-            return new ObjectResult(body)
-            {
-                StatusCode = statusCode
-            };
-        }
 
         public void Dispose()
         {
