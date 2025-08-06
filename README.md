@@ -232,7 +232,7 @@ public class MediatorValidationFlow<TRequest, TResponse> : IMediatorFlow<TReques
 ```csharp
 public class MyRequestValidation : AbstractValidator<MyRequest>
 {
-    public LoginValidation()
+    public MyRequestValidation()
     {
         RuleFor(r => r.Property1)
             .NotEmpty()
