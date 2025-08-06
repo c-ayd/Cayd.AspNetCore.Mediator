@@ -8,6 +8,11 @@ namespace Cayd.AspNetCore.Mediator.DependencyInjection
 {
     public static class MediatorDependencyInjection
     {
+        /// <summary>
+        /// Adds <see cref="IMediator"/> to the dependency injection.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configure">Adds handlers and custom flow elements</param>
         public static void AddMediator(this IServiceCollection services, Action<MediatorConfig> configure)
         {
             var config = new MediatorConfig(services);

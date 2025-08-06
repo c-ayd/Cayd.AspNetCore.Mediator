@@ -1,4 +1,5 @@
-﻿using Cayd.AspNetCore.Mediator.Exceptions;
+﻿using Cayd.AspNetCore.Mediator.Abstractions;
+using Cayd.AspNetCore.Mediator.Exceptions;
 using Cayd.AspNetCore.Mediator.Flows;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -21,18 +22,38 @@ namespace Cayd.AspNetCore.Mediator.DependencyInjection
             _isThereAnyMediatorFlow = false;
         }
 
+        /// <summary>
+        /// Finds and adds all classes implementing <see cref="IAsyncHandler{TRequest, TResponse}"/> in a given assembly.
+        /// </summary>
+        /// <param name="assembly">Assembly from which handlers to add</param>
         public void AddHandlersFromAssembly(Assembly assembly)
             => _assemblies.Add(assembly);
 
+        /// <summary>
+        /// Finds and adds all classes implementing <see cref="IAsyncHandler{TRequest, TResponse}"/> in given assemblies.
+        /// </summary>
+        /// <param name="assemblies">Assemblies from which handlers to add</param>
         public void AddHandlersFromAssemblies(params Assembly[] assemblies)
             => _assemblies.AddRange(assemblies);
 
+        /// <summary>
+        /// Adds a custom transient flow element.
+        /// </summary>
+        /// <param name="flowType">Type of the custom flow element</param>
         public void AddTransientFlow(Type flowType)
             => AddFlow(flowType, ServiceLifetime.Transient);
 
+        /// <summary>
+        /// Adds a custom scoped flow element.
+        /// </summary>
+        /// <param name="flowType">Type of the custom flow element</param>
         public void AddScopedFlow(Type flowType)
             => AddFlow(flowType, ServiceLifetime.Scoped);
 
+        /// <summary>
+        /// Adds a custom singleton flow element.
+        /// </summary>
+        /// <param name="flowType">Type of the custom flow element</param>
         public void AddSingletonFlow(Type flowType)
             => AddFlow(flowType, ServiceLifetime.Singleton);
 
