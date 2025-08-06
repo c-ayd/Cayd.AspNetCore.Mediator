@@ -4,7 +4,7 @@
     <TargetFrameworks>net5.0;net6.0;net8.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <PackageId>Cayd.AspNetCore.Mediator</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <Title>Mediator library that handles request-handler-response flows for ASP.NET Core</Title>
     <Authors>Cemal A. Aydeniz</Authors>
@@ -14,7 +14,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/c-ayd/Cayd.AspNetCore.Mediator</RepositoryUrl>
     <PackageTags>cayd;aspnetcore;mediator;request;handler;response;cqrs;command;query;async</PackageTags>
-    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <PackageReleaseNotes>Update readme</PackageReleaseNotes>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
 
