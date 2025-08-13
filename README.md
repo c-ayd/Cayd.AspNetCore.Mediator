@@ -48,8 +48,8 @@ builder.Services.AddMediator(config =>
     config.AddHandlersFromAssembly(Assembly.GetAssembly(typeof(MyClassInAssembly)!));
 
     // ... or from multiple assemblies
-    config.AddHandlersFromAssemblies(Assembly.GetAssembly(typeof(MyClassInAssembly)!,
-        typeof(MyClassInAnotherAssembly)!));
+    config.AddHandlersFromAssemblies(Assembly.GetAssembly(typeof(MyClassInAssembly))!,
+        Assembly.GetAssembly(typeof(MyClassInAnotherAssembly))!);
 });
 
 
@@ -68,8 +68,8 @@ public class Startup
             config.AddHandlersFromAssembly(Assembly.GetAssembly(typeof(MyClassInAssembly)!));
 
             // ... or from multiple assemblies
-            config.AddHandlersFromAssemblies(Assembly.GetAssembly(typeof(MyClassInAssembly)!,
-                typeof(MyClassInAnotherAssembly)!));
+            config.AddHandlersFromAssemblies(Assembly.GetAssembly(typeof(MyClassInAssembly))!,
+                Assembly.GetAssembly(typeof(MyClassInAnotherAssembly))!);
         });
     }
 }
